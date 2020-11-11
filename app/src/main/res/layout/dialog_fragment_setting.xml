@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="8dp">
+
+    <TextView
+        android:id="@+id/textServer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Server" />
+
+    <EditText
+        android:id="@+id/settingServer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/textAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Account" />
+
+    <EditText
+        android:id="@+id/settingAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/textPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Password" />
+
+    <EditText
+        android:id="@+id/settingPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/textOthers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Others" />
+
+    <CheckBox
+        android:id="@+id/settingAutoTopRecord"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Auto Top Record" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingStart="8dp">
+
+        <TextView
+            android:id="@+id/textRecordTiming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Record Timing (per N minites)" />
+
+        <EditText
+            android:id="@+id/settingRecordTiming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingStart="8dp">
+
+        <TextView
+            android:id="@+id/textUploadTiming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload Timing (per N records)" />
+
+        <EditText
+            android:id="@+id/settingUploadTiming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LogFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/recordTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Total"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/recordElevation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Elevation"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recordTotalTime" />
+
+        <TextView
+            android:id="@+id/recordElevationMin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Min:"
+            app:layout_constraintStart_toStartOf="@+id/recordElevation"
+            app:layout_constraintTop_toBottomOf="@+id/recordElevation" />
+
+        <TextView
+            android:id="@+id/recordElevationMinMetre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="0.0m"
+            app:layout_constraintStart_toEndOf="@+id/recordElevationMin"
+            app:layout_constraintTop_toTopOf="@+id/recordElevationMin" />
+
+        <TextView
+            android:id="@+id/recordElevationMax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Max:"
+            app:layout_constraintStart_toEndOf="@+id/recordElevationMinMetre"
+            app:layout_constraintTop_toTopOf="@+id/recordElevationMin" />
+
+        <TextView
+            android:id="@+id/recordElevationMaxMetre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="0.0m"
+            app:layout_constraintStart_toEndOf="@+id/recordElevationMax"
+            app:layout_constraintTop_toTopOf="@+id/recordElevationMax" />
+
+        <TextView
+            android:id="@+id/recordElevationGain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Gain:"
+            app:layout_constraintStart_toEndOf="@+id/recordElevationMaxMetre"
+            app:layout_constraintTop_toTopOf="@+id/recordElevationMax" />
+
+        <TextView
+            android:id="@+id/recordElevationGainMetre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="0.0m"
+            app:layout_constraintStart_toEndOf="@+id/recordElevationGain"
+            app:layout_constraintTop_toTopOf="@+id/recordElevationGain" />
+
+        <TextView
+            android:id="@+id/recordElevationLoss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Loss:"
+            app:layout_constraintStart_toEndOf="@+id/recordElevationGainMetre"
+            app:layout_constraintTop_toTopOf="@+id/recordElevationGain" />
+
+        <TextView
+            android:id="@+id/recordElevationLossMetre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="0.0m"
+            app:layout_constraintStart_toEndOf="@+id/recordElevationLoss"
+            app:layout_constraintTop_toTopOf="@+id/recordElevationLoss" />
+
+        <TextView
+            android:id="@+id/recordTotalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Time:"
+            app:layout_constraintStart_toStartOf="@+id/recordTotal"
+            app:layout_constraintTop_toBottomOf="@+id/recordTotal" />
+
+        <TextView
+            android:id="@+id/recordTotalTimeSecond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="00:00:00"
+            app:layout_constraintStart_toEndOf="@+id/recordTotalTime"
+            app:layout_constraintTop_toTopOf="@+id/recordTotalTime" />
+
+        <TextView
+            android:id="@+id/recordTotalDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Distance:"
+            app:layout_constraintStart_toEndOf="@+id/recordTotalTimeSecond"
+            app:layout_constraintTop_toTopOf="@+id/recordTotalTime" />
+
+        <TextView
+            android:id="@+id/recordTotalDistanceMetre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="0.0m"
+            app:layout_constraintStart_toEndOf="@+id/recordTotalDistance"
+            app:layout_constraintTop_toTopOf="@+id/recordTotalDistance" />
+
+        <TextView
+            android:id="@+id/recordHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Record History"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recordElevationMin" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recordHistoryList"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recordHistory" >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/recordHistoryLast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:rotation="-90"
+            android:src="@drawable/ic_our_last"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toTopOf="@+id/recordHistoryFirst"
+            app:layout_constraintEnd_toEndOf="@+id/recordHistoryFirst" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/recordHistoryFirst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:enabled="false"
+            android:rotation="-90"
+            android:src="@drawable/ic_our_first"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
