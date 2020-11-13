@@ -30,13 +30,13 @@
         android:inputType="text" />
 
     <TextView
-        android:id="@+id/textPassword"
+        android:id="@+id/textKeyword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Password" />
+        android:text="Keyword" />
 
     <EditText
-        android:id="@+id/settingPassword"
+        android:id="@+id/settingKeyword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword" />

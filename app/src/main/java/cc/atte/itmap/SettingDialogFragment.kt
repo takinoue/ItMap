@@ -33,8 +33,8 @@ class SettingDialogFragment: DialogFragment() {
         binding.settingServer.setText(server)
         val account = ItMapApp.getPreferenceString(KEY_ACCOUNT)
         binding.settingAccount.setText(account)
-        val password = ItMapApp.getPreferenceString(KEY_KEYWORD)
-        binding.settingPassword.setText(password)
+        val keyword = ItMapApp.getPreferenceString(KEY_KEYWORD)
+        binding.settingKeyword.setText(keyword)
         val autoTopRecord = ItMapApp.getPreferenceBoolean(KEY_AUTO_TOP_RECORD)
         binding.settingAutoTopRecord.isChecked = autoTopRecord
         val recordTiming = ItMapApp.getPreferenceInt(KEY_RECORD_TIMING, 1)
@@ -56,9 +56,9 @@ class SettingDialogFragment: DialogFragment() {
                     Toast.makeText(activity, "bad account string", Toast.LENGTH_SHORT).show()
                 else if (account != newAccount)
                     ItMapApp.putPreferenceString(KEY_ACCOUNT, newAccount)
-                val newPassword = binding.settingPassword.text.toString()
-                if (password != newPassword)
-                    ItMapApp.putPreferenceString(KEY_KEYWORD, newPassword)
+                val newKeyword = binding.settingKeyword.text.toString()
+                if (keyword != newKeyword)
+                    ItMapApp.putPreferenceString(KEY_KEYWORD, newKeyword)
                 val newAutoTopRecord = binding.settingAutoTopRecord.isChecked
                 if (autoTopRecord != newAutoTopRecord)
                     ItMapApp.putPreferenceBoolean(KEY_AUTO_TOP_RECORD, newAutoTopRecord)
