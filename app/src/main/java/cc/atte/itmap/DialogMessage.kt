@@ -4,15 +4,15 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import cc.atte.itmap.databinding.DialogFragmentMessageBinding
+import cc.atte.itmap.databinding.DialogMessageBinding
 
-class MessageDialogFragment: DialogFragment() {
+class DialogMessage: DialogFragment() {
     companion object {
         const val KEY_MESSAGE = "message"
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        ItMapLog.debug("onCreateDialog($savedInstanceState)")
+        LogModel.debug("onCreateDialog($savedInstanceState)")
         super.onCreateDialog(savedInstanceState)
 
         val builder = activity?.let {
@@ -20,9 +20,9 @@ class MessageDialogFragment: DialogFragment() {
         } ?: error("null activity")
 
         val inflater = requireActivity().layoutInflater
-        val binding = DialogFragmentMessageBinding.inflate(inflater)
+        val binding = DialogMessageBinding.inflate(inflater)
 
-        val message = ItMapApp.getPreferenceString(KEY_MESSAGE)
+        val message = AppMain.Preference.getString(KEY_MESSAGE)
         binding.settingMessage.setText(message)
 
         builder.setView(binding.root)
@@ -30,7 +30,7 @@ class MessageDialogFragment: DialogFragment() {
             .setPositiveButton("OK") { _, _ ->
                 val newMessage = binding.settingMessage.text.toString()
                 if (message != newMessage)
-                    ItMapApp.putPreferenceString(KEY_MESSAGE, newMessage)
+                    AppMain.Preference.putString(KEY_MESSAGE, newMessage)
             }
             .setNegativeButton("CANCEL") { _, _ -> }
 

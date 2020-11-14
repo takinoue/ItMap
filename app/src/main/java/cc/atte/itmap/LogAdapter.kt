@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
-class ItMapLogAdapter(data: OrderedRealmCollection<ItMapLog>)
-    : RealmRecyclerViewAdapter<ItMapLog, ItMapLogAdapter.ViewHolder>(data, true) {
+class LogAdapter(data: OrderedRealmCollection<LogModel>)
+    : RealmRecyclerViewAdapter<LogModel, LogAdapter.ViewHolder>(data, true) {
 
     init {
         setHasStableIds(true)

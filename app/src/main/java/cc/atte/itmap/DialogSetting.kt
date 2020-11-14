@@ -6,20 +6,20 @@ import android.webkit.URLUtil
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import cc.atte.itmap.databinding.DialogFragmentSettingBinding
+import cc.atte.itmap.databinding.DialogSettingBinding
 
-class SettingDialogFragment: DialogFragment() {
+class DialogSetting: DialogFragment() {
     companion object {
         const val KEY_SERVER = "server"
         const val KEY_ACCOUNT = "account"
         const val KEY_KEYWORD = "keyword"
-        const val KEY_AUTO_TOP_RECORD = "auto_top_record"
         const val KEY_RECORD_TIMING = "record_timing"
         const val KEY_UPLOAD_TIMING = "upload_timing"
+        const val KEY_AUTO_FOLLOW_RECORD = "auto_follow_record"
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        ItMapLog.debug("onCreateDialog($savedInstanceState)")
+        LogModel.debug("onCreateDialog($savedInstanceState)")
         super.onCreateDialog(savedInstanceState)
 
         val builder = activity?.let {
@@ -27,20 +27,20 @@ class SettingDialogFragment: DialogFragment() {
         } ?: error("null activity")
 
         val inflater = requireActivity().layoutInflater
-        val binding = DialogFragmentSettingBinding.inflate(inflater)
+        val binding = DialogSettingBinding.inflate(inflater)
 
-        val server = ItMapApp.getPreferenceString(KEY_SERVER)
+        val server = AppMain.Preference.getString(KEY_SERVER)
         binding.settingServer.setText(server)
-        val account = ItMapApp.getPreferenceString(KEY_ACCOUNT)
+        val account = AppMain.Preference.getString(KEY_ACCOUNT)
         binding.settingAccount.setText(account)
-        val keyword = ItMapApp.getPreferenceString(KEY_KEYWORD)
+        val keyword = AppMain.Preference.getString(KEY_KEYWORD)
         binding.settingKeyword.setText(keyword)
-        val autoTopRecord = ItMapApp.getPreferenceBoolean(KEY_AUTO_TOP_RECORD)
-        binding.settingAutoTopRecord.isChecked = autoTopRecord
-        val recordTiming = ItMapApp.getPreferenceInt(KEY_RECORD_TIMING, 1)
+        val recordTiming = AppMain.Preference.getInt(KEY_RECORD_TIMING, 1)
         binding.settingRecordTiming.setText(recordTiming.toString())
-        val uploadTiming = ItMapApp.getPreferenceInt(KEY_UPLOAD_TIMING, 2)
+        val uploadTiming = AppMain.Preference.getInt(KEY_UPLOAD_TIMING, 2)
         binding.settingUploadTiming.setText(uploadTiming.toString())
+        val autoTopRecord = AppMain.Preference.getBoolean(KEY_AUTO_FOLLOW_RECORD)
+        binding.settingAutoFollowRecord.isChecked = autoTopRecord
 
         builder.setView(binding.root)
             .setTitle("Setting")
@@ -50,24 +50,24 @@ class SettingDialogFragment: DialogFragment() {
                 if (!URLUtil.isValidUrl(newServer) || !newServer.endsWith("/"))
                     Toast.makeText(activity, "bad server url", Toast.LENGTH_SHORT).show()
                 else if (server != newServer)
-                    ItMapApp.putPreferenceString(KEY_SERVER, newServer)
+                    AppMain.Preference.putString(KEY_SERVER, newServer)
                 val newAccount = binding.settingAccount.text.toString()
                 if (!newAccount.all { it.isLetterOrDigit() || it in listOf('-', '_') })
                     Toast.makeText(activity, "bad account string", Toast.LENGTH_SHORT).show()
                 else if (account != newAccount)
-                    ItMapApp.putPreferenceString(KEY_ACCOUNT, newAccount)
+                    AppMain.Preference.putString(KEY_ACCOUNT, newAccount)
                 val newKeyword = binding.settingKeyword.text.toString()
                 if (keyword != newKeyword)
-                    ItMapApp.putPreferenceString(KEY_KEYWORD, newKeyword)
-                val newAutoTopRecord = binding.settingAutoTopRecord.isChecked
-                if (autoTopRecord != newAutoTopRecord)
-                    ItMapApp.putPreferenceBoolean(KEY_AUTO_TOP_RECORD, newAutoTopRecord)
+                    AppMain.Preference.putString(KEY_KEYWORD, newKeyword)
                 val newRecordTiming = binding.settingRecordTiming.text.toString().toInt()
                 if (recordTiming != newRecordTiming && 1 <= newRecordTiming)
-                    ItMapApp.putPreferenceInt(KEY_RECORD_TIMING, newRecordTiming)
+                    AppMain.Preference.putInt(KEY_RECORD_TIMING, newRecordTiming)
                 val newUploadTiming = binding.settingUploadTiming.text.toString().toInt()
                 if (uploadTiming != newUploadTiming && 2 <= newUploadTiming)
-                    ItMapApp.putPreferenceInt(KEY_UPLOAD_TIMING, newUploadTiming)
+                    AppMain.Preference.putInt(KEY_UPLOAD_TIMING, newUploadTiming)
+                val newAutoTopRecord = binding.settingAutoFollowRecord.isChecked
+                if (autoTopRecord != newAutoTopRecord)
+                    AppMain.Preference.putBoolean(KEY_AUTO_FOLLOW_RECORD, newAutoTopRecord)
             }
             .setNegativeButton("CANCEL") { _, _ -> }
 

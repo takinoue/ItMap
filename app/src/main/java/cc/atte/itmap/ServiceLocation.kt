@@ -2,17 +2,13 @@ package cc.atte.itmap
 
 import android.Manifest
 import android.app.*
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.IBinder
 import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.location.*
 import io.realm.Realm
 import io.realm.Sort
@@ -21,28 +17,18 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class LocationService : Service() {
+class ServiceLocation : Service() {
     companion object {
         const val CHANNEL_ID = "itmap_channel"
         const val CHANNEL_NAME = "itmap"
         const val CHANNEL_DESCRIPTION = "itmap status"
-
-        fun isRunning(context: Context): Boolean {
-            return LocalBroadcastManager.getInstance(context)
-                .sendBroadcast(Intent("PingPong"))
-        }
-    }
-
-    private val broadcastReceiver = object: BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) { /* nop */ }
     }
 
     private lateinit var fusedClient: FusedLocationProviderClient
 
     override fun onCreate() {
         super.onCreate()
-        LocalBroadcastManager.getInstance(applicationContext)
-            .registerReceiver(broadcastReceiver, IntentFilter("PingPong"))
+        AppMain.isService = true
         fusedClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
@@ -56,31 +42,31 @@ class LocationService : Service() {
     private var locationRequest: LocationRequest? = null
     private var locationCallback: LocationCallback? = null
 
-    private val apiService by lazy { ItMapApiService.create(server) }
+    private val apiService by lazy { JsonApiService.create(server) }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        ItMapLog.debug("onStartCommand($intent, $flags, $startId)")
+        LogModel.debug("onStartCommand($intent, $flags, $startId)")
 
-        server = ItMapApp.getPreferenceString(SettingDialogFragment.KEY_SERVER)
+        server = AppMain.Preference.getString(DialogSetting.KEY_SERVER)
         if ("" == server) {
-            server = ItMapApiService.BASE_URL
-            ItMapApp.putPreferenceString(SettingDialogFragment.KEY_SERVER, server)
+            server = JsonApiService.BASE_URL
+            AppMain.Preference.putString(DialogSetting.KEY_SERVER, server)
         }
-        account = ItMapApp.getPreferenceString(SettingDialogFragment.KEY_ACCOUNT)
+        account = AppMain.Preference.getString(DialogSetting.KEY_ACCOUNT)
         if ("" == account) {
             account = UUID.randomUUID().toString()
-            ItMapApp.putPreferenceString(SettingDialogFragment.KEY_ACCOUNT, account)
+            AppMain.Preference.putString(DialogSetting.KEY_ACCOUNT, account)
         }
-        keyword = ItMapApp.getPreferenceString(SettingDialogFragment.KEY_KEYWORD)
+        keyword = AppMain.Preference.getString(DialogSetting.KEY_KEYWORD)
         if ("" == keyword) {
             keyword = UUID.randomUUID().toString()
-            ItMapApp.putPreferenceString(SettingDialogFragment.KEY_KEYWORD, keyword)
+            AppMain.Preference.putString(DialogSetting.KEY_KEYWORD, keyword)
         }
 
         recordTiming =
-            ItMapApp.getPreferenceInt(SettingDialogFragment.KEY_RECORD_TIMING, 1)
+            AppMain.Preference.getInt(DialogSetting.KEY_RECORD_TIMING, 1)
         uploadTiming =
-            ItMapApp.getPreferenceInt(SettingDialogFragment.KEY_UPLOAD_TIMING, 2)
+            AppMain.Preference.getInt(DialogSetting.KEY_UPLOAD_TIMING, 2)
 
         locationRequest = createLocationRequest()
         locationCallback = createLocationCallback()
@@ -97,15 +83,16 @@ class LocationService : Service() {
     }
 
     override fun onDestroy() {
-        ItMapLog.debug("onDestroy()")
+        LogModel.debug("onDestroy()")
         stopLocationUpdates()
+        AppMain.isService = false
         super.onDestroy()
     }
 
     private fun startLocationUpdates() {
         if (PackageManager.PERMISSION_GRANTED
             != checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            ItMapLog.appendDebug("Location access prohibited")
+            LogModel.appendDebug("Location access prohibited")
             val notification = createNotificationProhibited()
             NotificationManagerCompat.from(this).notify(2, notification)
         } else
@@ -117,7 +104,7 @@ class LocationService : Service() {
     }
 
     private fun createNotificationRunning(): Notification {
-        val openIntent = Intent(this, MainActivity::class.java).let {
+        val openIntent = Intent(this, ActMain::class.java).let {
             PendingIntent.getActivity(this, 0, it, 0)
         }
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
@@ -158,13 +145,13 @@ class LocationService : Service() {
             // Recording
             locationResult ?: return
             var uploadSchedule = false
-            ItMapLog.debug("recording")
+            LogModel.debug("recording")
             for (location in locationResult.locations) {
-                val newId = ItMapRecord.append(
+                val newId = RecordModel.append(
                     location.time / 1000.0,
                     location.longitude, location.latitude, location.altitude
                 )
-                ItMapLog.appendDebug(
+                LogModel.appendDebug(
                     "Record[%03d] = { %.3f, %.3f }"
                         .format(newId, location.longitude, location.latitude)
                 )
@@ -173,38 +160,40 @@ class LocationService : Service() {
             }
             // Uploading
             if (!uploadSchedule) return
-            ItMapLog.debug("uploading")
+            LogModel.debug("uploading")
             val realm = Realm.getDefaultInstance()
-            val record = realm.where(ItMapRecord::class.java)
+            val record = realm.where(RecordModel::class.java)
                 .equalTo("upload", false)
                 .sort("id", Sort.DESCENDING).limit(60).findAll()
-            val message = ItMapApp.getPreferenceString(MessageDialogFragment.KEY_MESSAGE)
-            val apiModel = ItMapApiModel.Request(
+            val message = AppMain.Preference.getString(DialogMessage.KEY_MESSAGE)
+            val apiModel = JsonApiModel.Request(
                 keyword, message.takeIf { it != "" },
                 record.map {
-                    ItMapApiModel.Request.Coordinate(
+                    JsonApiModel.Request.Coordinate(
                         it.timestamp, it.longitude, it.latitude, it.altitude
                     )
                 }
             )
-            val callback = object : Callback<ItMapApiModel.Response> {
+            val callback = object : Callback<JsonApiModel.Response> {
                 override fun onFailure(
-                    call: Call<ItMapApiModel.Response>, t: Throwable
+                    call: Call<JsonApiModel.Response>, t: Throwable
                 ) {
-                    ItMapLog.appendError("upload failed")
+                    LogModel.appendError("upload failed")
                 }
                 override fun onResponse(
-                    call: Call<ItMapApiModel.Response>,
-                    response: Response<ItMapApiModel.Response>
+                    call: Call<JsonApiModel.Response>,
+                    response: Response<JsonApiModel.Response>
                 ) {
                     if (!response.isSuccessful) return Unit.also {
                         val errorResponse = response.errorBody()?.string()
-                        ItMapLog.appendError("server failed: $errorResponse")
+                        LogModel.appendError("server failed: $errorResponse")
                     }
                     if (record.size != response.body()?.success?.count)
-                        ItMapLog.appendDebug("size mismatched between request and response")
-                    realm.executeTransaction { record.setBoolean("upload", true) }
-                    ItMapLog.debug("upload successfully")
+                        LogModel.appendDebug("size mismatched between request and response")
+                    AppMain.instance.realmExecute {
+                        record.setBoolean("upload", true)
+                    }
+                    LogModel.debug("upload successfully")
                 }
             }
             apiService.postData(account, apiModel).enqueue(callback)

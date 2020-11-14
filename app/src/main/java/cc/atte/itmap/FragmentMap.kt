@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import cc.atte.itmap.databinding.FragmentMapBinding
 
-class MapFragment : Fragment() {
+class FragmentMap : Fragment() {
     private var dummy: Int = 0
 
     companion object {
@@ -17,18 +17,18 @@ class MapFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(dummy: Int) =
-            MapFragment().apply {
+            FragmentMap().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_DUMMY, dummy)
                 }
             }
     }
 
-    private lateinit var actCtx: MainActivity
+    private lateinit var actCtx: ActMain
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        actCtx = context as MainActivity
+        actCtx = context as ActMain
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,19 +43,19 @@ class MapFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        ItMapLog.debug("MapFragment.onCreateView")
+        LogModel.debug("MapFragment.onCreateView")
         val view = inflater.inflate(R.layout.fragment_map, container, false)
 
         binding = FragmentMapBinding.bind(view)
 
         //binding.htmlMap.webViewClient = WebViewClient()
-        val server = ItMapApp.getPreferenceString(SettingDialogFragment.KEY_SERVER)
-        val account = ItMapApp.getPreferenceString(SettingDialogFragment.KEY_ACCOUNT)
+        val server = AppMain.Preference.getString(DialogSetting.KEY_SERVER)
+        val account = AppMain.Preference.getString(DialogSetting.KEY_ACCOUNT)
         if (server != "" && account != "") {
             binding.htmlMap.settings.javaScriptEnabled = true
             binding.htmlMap.loadUrl("$server$account.html")
         } else
-            Toast.makeText(activity, "settings required", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "setting required", Toast.LENGTH_SHORT).show()
 
         return view
     }

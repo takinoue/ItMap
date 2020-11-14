@@ -1,14 +1,13 @@
 package cc.atte.itmap
 
 import android.util.Log
-import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
 import io.realm.kotlin.where
 import java.util.*
 
-open class ItMapLog(
+open class LogModel(
     @PrimaryKey
     var id: Long = 0L,
 
@@ -18,12 +17,6 @@ open class ItMapLog(
     var message: String = ""
 ): RealmObject() {
     companion object {
-        private fun <T> use(block: (Realm) -> T): T =
-            Realm.getDefaultInstance().use(block)
-
-        private fun exec(block: (Realm) -> Unit): Unit =
-            use { db -> db.executeTransaction(block) }
-
         fun debug(msg: String) =
             Log.d("ItMap", msg)
 
@@ -31,11 +24,11 @@ open class ItMapLog(
             Log.e("ItMap", msg)
 
         fun append(message: String): Unit =
-            exec { db ->
+            AppMain.instance.realmExecute { db ->
                 val date = Date()
-                val query = db.where<ItMapLog>()
+                val query = db.where<LogModel>()
                 val maxId = query.max("id")?.toLong() ?: 0L
-                db.copyToRealm(ItMapLog(maxId + 1, date, message))
+                db.copyToRealm(LogModel(maxId + 1, date, message))
             }
 
         fun appendDebug(message: String): Unit =

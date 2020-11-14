@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cc.atte.itmap.databinding.FragmentRecordBinding
 import io.realm.*
 
-class RecordFragment : Fragment() {
+class FragmentRecord : Fragment() {
     private var dummy: Int = 0
 
     companion object {
@@ -19,18 +19,18 @@ class RecordFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(dummy: Int) =
-            RecordFragment().apply {
+            FragmentRecord().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_DUMMY, dummy)
                 }
             }
     }
 
-    private lateinit var actCtx: MainActivity
+    private lateinit var actCtx: ActMain
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        actCtx = context as MainActivity
+        actCtx = context as ActMain
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +51,7 @@ class RecordFragment : Fragment() {
         realm = actCtx.realm
         binding = FragmentRecordBinding.bind(view)
 
-        val recordData = realm.where(ItMapRecord::class.java)
+        val recordData = realm.where(RecordModel::class.java)
             .sort("id", Sort.DESCENDING).findAll()
 
         binding.recordHistoryLast.setOnClickListener {
@@ -72,16 +72,16 @@ class RecordFragment : Fragment() {
             }
         })
 
-        val adapter = ItMapRecordAdapter(recordData)
+        val adapter = RecordAdapter(recordData)
         val layoutManager = object: LinearLayoutManager(activity) {
             override fun onItemsAdded(
                 recyclerView: RecyclerView,
                 positionStart: Int, itemCount: Int
             ) {
                 super.onItemsAdded(recyclerView, positionStart, itemCount)
-                val autoTopPosition =
-                    ItMapApp.getPreferenceBoolean(SettingDialogFragment.KEY_AUTO_TOP_RECORD)
-                if (autoTopPosition) recyclerView.scrollToPosition(0)
+                val autoFollowRecord =
+                    AppMain.Preference.getBoolean(DialogSetting.KEY_AUTO_FOLLOW_RECORD)
+                if (autoFollowRecord) recyclerView.scrollToPosition(0)
             }
         }
 

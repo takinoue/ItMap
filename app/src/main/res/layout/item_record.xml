@@ -6,7 +6,7 @@
     <CheckBox
         android:id="@+id/recordUpload"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="24dp"
         android:enabled="false" />
 
     <TextView

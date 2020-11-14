@@ -11,8 +11,8 @@ import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 import java.util.*
 
-class ItMapRecordAdapter(data: OrderedRealmCollection<ItMapRecord>)
-    : RealmRecyclerViewAdapter<ItMapRecord, ItMapRecordAdapter.ViewHolder>(data, true) {
+class RecordAdapter(data: OrderedRealmCollection<RecordModel>)
+    : RealmRecyclerViewAdapter<RecordModel, RecordAdapter.ViewHolder>(data, true) {
 
     init {
         setHasStableIds(true)

@@ -1,6 +1,6 @@
 package cc.atte.itmap
 
-data class ItMapApiModel(
+data class JsonApiModel(
     var request: Request?,
     var response: Response?
 ) {

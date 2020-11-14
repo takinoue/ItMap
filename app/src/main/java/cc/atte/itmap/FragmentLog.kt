@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cc.atte.itmap.databinding.FragmentLogBinding
 import io.realm.*
 
-class LogFragment : Fragment() {
+class FragmentLog : Fragment() {
     private var dummy: Int = 0
 
     companion object {
@@ -19,18 +19,18 @@ class LogFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(dummy: Int) =
-            LogFragment().apply {
+            FragmentLog().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_DUMMY, dummy)
                 }
             }
     }
 
-    private lateinit var actCtx: MainActivity
+    private lateinit var actCtx: ActMain
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        actCtx = context as MainActivity
+        actCtx = context as ActMain
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,10 +51,10 @@ class LogFragment : Fragment() {
         realm = actCtx.realm
         binding = FragmentLogBinding.bind(view)
 
-        val logData = realm.where(ItMapLog::class.java)
+        val logData = realm.where(LogModel::class.java)
             .sort("id", Sort.DESCENDING).findAll()
 
-        val adapter = ItMapLogAdapter(logData)
+        val adapter = LogAdapter(logData)
         val layoutManager = LinearLayoutManager(activity)
 
         binding.logLast.setOnClickListener {
