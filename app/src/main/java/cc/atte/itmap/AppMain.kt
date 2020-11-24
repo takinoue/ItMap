@@ -22,17 +22,17 @@ class AppMain: Application() {
 
         Realm.init(this)
 
-        val now = System.currentTimeMillis()
-        val yesterday = now / 1000.0 - 60 * 60 * 24
-
-        realmExecute { realm ->
-            realm.delete(LogModel::class.java)
-            realm.where(RecordModel::class.java)
-                .lessThanOrEqualTo("timestamp", yesterday)
-                .findAll().deleteAllFromRealm()
+        if (Preference.getBoolean(DialogSetting.KEY_AUTO_CLEAN_DATA)) {
+            val now = System.currentTimeMillis()
+            val yesterday = now / 1000.0 - 60 * 60 * 24
+            realmExecute { realm ->
+                realm.delete(LogModel::class.java)
+                realm.where(RecordModel::class.java)
+                    .lessThanOrEqualTo("timestamp", yesterday)
+                    .findAll().deleteAllFromRealm()
+            }
+            LogModel.append("old logs and records deleted.")
         }
-
-        LogModel.append("old logs and records deleted.")
     }
 
     // Utilities

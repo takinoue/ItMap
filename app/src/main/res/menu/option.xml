@@ -3,11 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/optionShare"
-        android:icon="@drawable/ic_our_share"
-        android:title="Share"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/optionSetting"
         android:icon="@drawable/ic_our_setting"
         android:title="Setting"
@@ -17,4 +12,24 @@
         android:icon="@drawable/ic_our_message"
         android:title="Message"
         app:showAsAction="always" />
+    <item android:title="Share">
+        <menu>
+            <item
+                android:id="@+id/optionShareUrl"
+                android:title="Share URL" />
+            <item
+                android:id="@+id/optionShareRecord"
+                android:title="Share Record" />
+        </menu>
+    </item>
+    <item android:title="Delete">
+        <menu>
+            <item
+                android:id="@+id/optionDeleteLog"
+                android:title="Delete Log" />
+            <item
+                android:id="@+id/optionDeleteRecord"
+                android:title="Delete Record" />
+        </menu>
+    </item>
 </menu>

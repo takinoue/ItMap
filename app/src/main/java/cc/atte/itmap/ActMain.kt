@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import cc.atte.itmap.databinding.ActivityMainBinding
 import io.realm.Realm
@@ -74,7 +75,13 @@ class ActMain : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.optionShare -> true.also {
+        R.id.optionSetting -> true.also {
+            DialogSetting().show(supportFragmentManager,null)
+        }
+        R.id.optionMessage -> true.also {
+            DialogMessage().show(supportFragmentManager,null)
+        }
+        R.id.optionShareUrl -> true.also {
             val server = AppMain.Preference.getString(DialogSetting.KEY_SERVER)
             val account = AppMain.Preference.getString(DialogSetting.KEY_ACCOUNT)
             val i = Intent(Intent.ACTION_SEND)
@@ -82,11 +89,31 @@ class ActMain : AppCompatActivity() {
             i.putExtra(Intent.EXTRA_TEXT, "$server$account.html")
             startActivity(Intent.createChooser(i, "Share URL"))
         }
-        R.id.optionSetting -> true.also {
-            DialogSetting().show(supportFragmentManager,null)
+        R.id.optionShareRecord -> true.also {
+            val recordData = realm.where(RecordModel::class.java).sort("id").findAll()
+            val recordLine = recordData.map {
+                "0:%.6f,%.6f,%.3f,ts=%.3f\n"
+                    .format(it.longitude, it.latitude, it.altitude, it.timestamp)
+            }
+            val recordText = recordLine.reversed().joinToString("")
+            val sendIntent = Intent(Intent.ACTION_SEND)
+            sendIntent.type = "text/plain"
+            sendIntent.putExtra(Intent.EXTRA_TEXT, recordText)
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT, "ItMap")
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
         }
-        R.id.optionMessage -> true.also {
-            DialogMessage().show(supportFragmentManager,null)
+        R.id.optionDeleteLog -> true.also {
+            if (AppMain.isService)
+                Toast.makeText(this, "Stop Recording", Toast.LENGTH_SHORT).show()
+            else
+                realm.executeTransactionAsync {  db-> db.delete(LogModel::class.java) }
+        }
+        R.id.optionDeleteRecord -> true.also {
+            if (AppMain.isService)
+                Toast.makeText(this, "Stop Recording", Toast.LENGTH_SHORT).show()
+            else
+                realm.executeTransactionAsync {  db-> db.delete(RecordModel::class.java) }
         }
         else -> super.onOptionsItemSelected(item)
     }

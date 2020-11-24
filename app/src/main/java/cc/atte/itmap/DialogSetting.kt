@@ -15,6 +15,7 @@ class DialogSetting: DialogFragment() {
         const val KEY_KEYWORD = "keyword"
         const val KEY_RECORD_TIMING = "record_timing"
         const val KEY_UPLOAD_TIMING = "upload_timing"
+        const val KEY_AUTO_CLEAN_DATA = "auto_clean_data"
         const val KEY_AUTO_FOLLOW_RECORD = "auto_follow_record"
     }
 
@@ -39,8 +40,10 @@ class DialogSetting: DialogFragment() {
         binding.settingRecordTiming.setText(recordTiming.toString())
         val uploadTiming = AppMain.Preference.getInt(KEY_UPLOAD_TIMING, 2)
         binding.settingUploadTiming.setText(uploadTiming.toString())
-        val autoTopRecord = AppMain.Preference.getBoolean(KEY_AUTO_FOLLOW_RECORD)
-        binding.settingAutoFollowRecord.isChecked = autoTopRecord
+        val autoCleanData = AppMain.Preference.getBoolean(KEY_AUTO_CLEAN_DATA)
+        binding.settingAutoCleanData.isChecked = autoCleanData
+        val autoFollowRecord = AppMain.Preference.getBoolean(KEY_AUTO_FOLLOW_RECORD)
+        binding.settingAutoFollowRecord.isChecked = autoFollowRecord
 
         builder.setView(binding.root)
             .setTitle("Setting")
@@ -65,9 +68,12 @@ class DialogSetting: DialogFragment() {
                 val newUploadTiming = binding.settingUploadTiming.text.toString().toInt()
                 if (uploadTiming != newUploadTiming && 2 <= newUploadTiming)
                     AppMain.Preference.putInt(KEY_UPLOAD_TIMING, newUploadTiming)
-                val newAutoTopRecord = binding.settingAutoFollowRecord.isChecked
-                if (autoTopRecord != newAutoTopRecord)
-                    AppMain.Preference.putBoolean(KEY_AUTO_FOLLOW_RECORD, newAutoTopRecord)
+                val newAutoCleanData = binding.settingAutoCleanData.isChecked
+                if (autoCleanData != newAutoCleanData)
+                    AppMain.Preference.putBoolean(KEY_AUTO_CLEAN_DATA, newAutoCleanData)
+                val newAutoFollowRecord = binding.settingAutoFollowRecord.isChecked
+                if (autoFollowRecord != newAutoFollowRecord)
+                    AppMain.Preference.putBoolean(KEY_AUTO_FOLLOW_RECORD, newAutoFollowRecord)
             }
             .setNegativeButton("CANCEL") { _, _ -> }
 
