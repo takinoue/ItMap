@@ -115,6 +115,9 @@ class ActMain : AppCompatActivity() {
             else
                 realm.executeTransactionAsync {  db-> db.delete(RecordModel::class.java) }
         }
+        R.id.optionPrivacy -> true.also {
+            DialogPrivacy().show(supportFragmentManager,null)
+        }
         else -> super.onOptionsItemSelected(item)
     }
 

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="8dp">
+
+    <TextView
+        android:id="@+id/textPrivacyRadius"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Radius (metre)" />
+
+    <EditText
+        android:id="@+id/editPrivacyRadius"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/textPrivacyLatitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Latitude (degree)" />
+
+    <EditText
+        android:id="@+id/editPrivacyLatitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberSigned|numberDecimal" />
+
+    <TextView
+        android:id="@+id/textPrivacyLongitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Longitude (degree)" />
+
+    <EditText
+        android:id="@+id/editPrivacyLongitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberSigned|numberDecimal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonPrivacyFetchLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:text="FETCH LOCATION" />
+
+        <Button
+            android:id="@+id/buttonPrivacyCheckLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:text="CHECK LOCATION" />
+    </LinearLayout>
+
+</LinearLayout>

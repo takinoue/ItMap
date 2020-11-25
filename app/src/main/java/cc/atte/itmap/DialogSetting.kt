@@ -66,7 +66,7 @@ class DialogSetting: DialogFragment() {
                 if (recordTiming != newRecordTiming && 1 <= newRecordTiming)
                     AppMain.Preference.putInt(KEY_RECORD_TIMING, newRecordTiming)
                 val newUploadTiming = binding.settingUploadTiming.text.toString().toInt()
-                if (uploadTiming != newUploadTiming && 2 <= newUploadTiming)
+                if (uploadTiming != newUploadTiming && 1 <= newUploadTiming)
                     AppMain.Preference.putInt(KEY_UPLOAD_TIMING, newUploadTiming)
                 val newAutoCleanData = binding.settingAutoCleanData.isChecked
                 if (autoCleanData != newAutoCleanData)

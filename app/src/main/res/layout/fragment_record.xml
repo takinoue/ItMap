@@ -22,6 +22,42 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/recordTotalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Time:"
+            app:layout_constraintStart_toStartOf="@+id/recordTotal"
+            app:layout_constraintTop_toBottomOf="@+id/recordTotal" />
+
+        <TextView
+            android:id="@+id/recordTotalTimeSecond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="00:00:00"
+            app:layout_constraintStart_toEndOf="@+id/recordTotalTime"
+            app:layout_constraintTop_toTopOf="@+id/recordTotalTime" />
+
+        <TextView
+            android:id="@+id/recordTotalDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Distance:"
+            app:layout_constraintStart_toEndOf="@+id/recordTotalTimeSecond"
+            app:layout_constraintTop_toTopOf="@+id/recordTotalTime" />
+
+        <TextView
+            android:id="@+id/recordTotalDistanceMetre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="0.0m"
+            app:layout_constraintStart_toEndOf="@+id/recordTotalDistance"
+            app:layout_constraintTop_toTopOf="@+id/recordTotalDistance" />
+
+        <TextView
             android:id="@+id/recordElevation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -103,42 +139,6 @@
             android:text="0.0m"
             app:layout_constraintStart_toEndOf="@+id/recordElevationLoss"
             app:layout_constraintTop_toTopOf="@+id/recordElevationLoss" />
-
-        <TextView
-            android:id="@+id/recordTotalTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="Time:"
-            app:layout_constraintStart_toStartOf="@+id/recordTotal"
-            app:layout_constraintTop_toBottomOf="@+id/recordTotal" />
-
-        <TextView
-            android:id="@+id/recordTotalTimeSecond"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="00:00:00"
-            app:layout_constraintStart_toEndOf="@+id/recordTotalTime"
-            app:layout_constraintTop_toTopOf="@+id/recordTotalTime" />
-
-        <TextView
-            android:id="@+id/recordTotalDistance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Distance:"
-            app:layout_constraintStart_toEndOf="@+id/recordTotalTimeSecond"
-            app:layout_constraintTop_toTopOf="@+id/recordTotalTime" />
-
-        <TextView
-            android:id="@+id/recordTotalDistanceMetre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="0.0m"
-            app:layout_constraintStart_toEndOf="@+id/recordTotalDistance"
-            app:layout_constraintTop_toTopOf="@+id/recordTotalDistance" />
 
         <TextView
             android:id="@+id/recordHistory"

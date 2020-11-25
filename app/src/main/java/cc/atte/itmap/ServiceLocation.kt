@@ -39,6 +39,10 @@ class ServiceLocation : Service() {
     private var recordTiming = 1
     private var uploadTiming = 2
 
+    private var privacyRadius = 0
+    private var privacyLatitude = 0.0
+    private var privacyLongitude = 0.0
+
     private var locationRequest: LocationRequest? = null
     private var locationCallback: LocationCallback? = null
 
@@ -67,6 +71,13 @@ class ServiceLocation : Service() {
             AppMain.Preference.getInt(DialogSetting.KEY_RECORD_TIMING, 1)
         uploadTiming =
             AppMain.Preference.getInt(DialogSetting.KEY_UPLOAD_TIMING, 2)
+
+        privacyRadius =
+            AppMain.Preference.getInt(DialogPrivacy.KEY_PRIVACY_RADIUS, 0)
+        privacyLatitude =
+            AppMain.Preference.getDouble(DialogPrivacy.KEY_PRIVACY_LATITUDE, 0.0)
+        privacyLongitude =
+            AppMain.Preference.getDouble(DialogPrivacy.KEY_PRIVACY_LONGITUDE, 0.0)
 
         locationRequest = createLocationRequest()
         locationCallback = createLocationCallback()
@@ -140,26 +151,36 @@ class ServiceLocation : Service() {
     }
 
     private fun createLocationCallback() = object: LocationCallback() {
-        private var appendCounter = 0
+        private var recordCounter = 0
+        private var uploadCounter = 0
         override fun onLocationResult(locationResult: LocationResult?) {
             // Recording
             locationResult ?: return
-            var uploadSchedule = false
+            //var uploadSchedule = false
             LogModel.debug("recording")
             for (location in locationResult.locations) {
+                if (0.0 < privacyRadius) {
+                    val privacyDistance = AppMain.Utility.hubeny(
+                        privacyLatitude, privacyLongitude,
+                        location.latitude, location.longitude
+                    )
+                    if (privacyDistance <= privacyRadius) {
+                        LogModel.appendDebug("in private area")
+                        continue
+                    }
+                }
                 val newId = RecordModel.append(
                     location.time / 1000.0,
                     location.longitude, location.latitude, location.altitude
                 )
+                recordCounter++
                 LogModel.appendDebug(
                     "Record[%03d] = { %.3f, %.3f }"
                         .format(newId, location.longitude, location.latitude)
                 )
-                if (appendCounter++ % uploadTiming == 0)
-                    uploadSchedule = true
             }
+            if (0 != uploadCounter && recordCounter - uploadCounter < uploadTiming) return
             // Uploading
-            if (!uploadSchedule) return
             LogModel.debug("uploading")
             val realm = Realm.getDefaultInstance()
             val record = realm.where(RecordModel::class.java)
@@ -167,7 +188,7 @@ class ServiceLocation : Service() {
                 .sort("id", Sort.DESCENDING).limit(60).findAll()
             val message = AppMain.Preference.getString(DialogMessage.KEY_MESSAGE)
             val apiModel = JsonApiModel.Request(
-                keyword, message.takeIf { it != "" },
+                keyword.takeIf { it != "" }, message.takeIf { it != "" },
                 record.map {
                     JsonApiModel.Request.Coordinate(
                         it.timestamp, it.longitude, it.latitude, it.altitude
@@ -193,6 +214,7 @@ class ServiceLocation : Service() {
                     AppMain.instance.realmExecute {
                         record.setBoolean("upload", true)
                     }
+                    uploadCounter = recordCounter
                     LogModel.debug("upload successfully")
                 }
             }
