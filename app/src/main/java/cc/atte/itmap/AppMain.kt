@@ -11,12 +11,13 @@ import kotlin.math.*
 class AppMain: Application() {
     companion object {
         lateinit var instance: AppMain private set
-        var isService: Boolean = false
     }
 
     init {
         instance = this
     }
+
+    var isService: Boolean = false
 
     override fun onCreate() {
         super.onCreate()
@@ -34,8 +35,6 @@ class AppMain: Application() {
             }
             LogModel.append("old logs and records deleted.")
         }
-        val ttt = Utility.hubeny(35.802739, 140.380034, 35.785796, 140.392265)
-        LogModel.debug("$ttt m")
     }
 
     // Utilities
@@ -56,26 +55,42 @@ class AppMain: Application() {
             }
         }
 
-    object Preference {
-        private fun get(): SharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(instance)
-        fun getInt(key: String, defValue: Int = 0): Int =
-            get().getInt(key, defValue)
-        fun putInt(key: String, value: Int): Unit =
-            get().edit { putInt(key, value) }
-        fun getString(key: String, defValue: String = ""): String =
-            get().getString(key, null) ?: defValue
-        fun putString(key: String, value: String): Unit =
-            get().edit { putString(key, value) }
-        fun getBoolean(key: String, defValue: Boolean = false): Boolean =
-            get().getBoolean(key, defValue)
-        fun putBoolean(key: String, value: Boolean): Unit =
-            get().edit { putBoolean(key, value) }
-        fun getDouble(key: String, defValue: Double = 0.0): Double =
-            java.lang.Double.longBitsToDouble(
-                get().getLong(key, java.lang.Double.doubleToRawLongBits(defValue)))
-        fun putDouble(key: String, value: Double): Unit =
-            get().edit { putLong(key, java.lang.Double.doubleToRawLongBits(value)) }
+    object Record {
+        private var altitude: Double = 0.0
+        private var latitude: Double = 0.0
+        private var longitude: Double = 0.0
+        private var firstTimestamp: Double? = null
+
+        var totalTime: Double = 0.0
+            private set
+        var totalDistance: Double = 0.0
+            private set
+
+        var elevationMin: Double = 0.0
+            private set
+        var elevationMax: Double = 0.0
+            private set
+        var elevationGain: Double = 0.0
+            private set
+        var elevationLoss: Double = 0.0
+            private set
+
+        fun update(ts: Double, lon: Double, lat: Double, alt: Double) {
+            firstTimestamp = firstTimestamp?.also {
+                totalTime = ts - it
+                totalDistance += Utility.hubeny(lat, lon, latitude, longitude)
+                if (alt < elevationMin) elevationMin = alt
+                else if (elevationMax < alt) elevationMax = alt
+                if (alt < altitude) elevationLoss += altitude - alt
+                else if (altitude < alt) elevationGain += alt - altitude
+            } ?: ts.also {
+                elevationMin = alt
+                elevationMax = alt
+            }
+            altitude = alt
+            latitude = lat
+            longitude = lon
+        }
     }
 
     object Utility {
@@ -99,5 +114,27 @@ class AppMain: Application() {
 
             return sqrt((t1 * t1) + (t2 * t2))
         }
+    }
+
+    object Preference {
+        private fun get(): SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(instance)
+        fun getInt(key: String, defValue: Int = 0): Int =
+            get().getInt(key, defValue)
+        fun putInt(key: String, value: Int): Unit =
+            get().edit { putInt(key, value) }
+        fun getString(key: String, defValue: String = ""): String =
+            get().getString(key, null) ?: defValue
+        fun putString(key: String, value: String): Unit =
+            get().edit { putString(key, value) }
+        fun getBoolean(key: String, defValue: Boolean = false): Boolean =
+            get().getBoolean(key, defValue)
+        fun putBoolean(key: String, value: Boolean): Unit =
+            get().edit { putBoolean(key, value) }
+        fun getDouble(key: String, defValue: Double = 0.0): Double =
+            java.lang.Double.longBitsToDouble(
+                get().getLong(key, java.lang.Double.doubleToRawLongBits(defValue)))
+        fun putDouble(key: String, value: Double): Unit =
+            get().edit { putLong(key, java.lang.Double.doubleToRawLongBits(value)) }
     }
 }

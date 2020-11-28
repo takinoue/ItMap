@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cc.atte.itmap.databinding.FragmentRecordBinding
@@ -43,6 +44,8 @@ class FragmentRecord : Fragment() {
     private lateinit var realm: Realm
     private lateinit var binding: FragmentRecordBinding
 
+    private val viewModel: FragmentRecordVM by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -50,6 +53,27 @@ class FragmentRecord : Fragment() {
 
         realm = actCtx.realm
         binding = FragmentRecordBinding.bind(view)
+
+        viewModel.totalTime.observe(viewLifecycleOwner, {
+            binding.recordTotalTimeSecond.text = "%02d:%02d:%02d".format(
+                (it / 3600).toInt(), (it / 60).toInt() % 60, it.toInt() % 60)
+        })
+        viewModel.totalDistance.observe(viewLifecycleOwner, {
+            binding.recordTotalDistanceMetre.text = "%.1fm".format(it)
+        })
+
+        viewModel.elevationMin.observe(viewLifecycleOwner, {
+            binding.recordElevationMinMetre.text = "%.1fm".format(it)
+        })
+        viewModel.elevationMax.observe(viewLifecycleOwner, {
+            binding.recordElevationMaxMetre.text = "%.1fm".format(it)
+        })
+        viewModel.elevationGain.observe(viewLifecycleOwner, {
+            binding.recordElevationGainMetre.text = "%.1fm".format(it)
+        })
+        viewModel.elevationLoss.observe(viewLifecycleOwner, {
+            binding.recordElevationLossMetre.text = "%.1fm".format(it)
+        })
 
         val recordData = realm.where(RecordModel::class.java)
             .sort("id", Sort.DESCENDING).findAll()

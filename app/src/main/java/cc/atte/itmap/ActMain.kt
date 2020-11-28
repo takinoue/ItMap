@@ -2,11 +2,15 @@ package cc.atte.itmap
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import cc.atte.itmap.databinding.ActivityMainBinding
 import io.realm.Realm
@@ -16,13 +20,18 @@ class ActMain : AppCompatActivity() {
     lateinit var realm: Realm
     private lateinit var binding: ActivityMainBinding
 
+    private val recordVM: FragmentRecordVM by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        LogModel.debug("onCreate($savedInstanceState)")
+        LogModel.debug("ActMain.onCreate($savedInstanceState)")
 
         super.onCreate(savedInstanceState)
 
         realm = Realm.getDefaultInstance()
         binding = ActivityMainBinding.inflate(layoutInflater)
+
+        registerReceiver(serviceReceiver,
+            IntentFilter("${packageName}.serviceReceiver"))
 
         setContentView(binding.root)
 
@@ -47,7 +56,7 @@ class ActMain : AppCompatActivity() {
             ft.replace(R.id.container, f, "RECORD").commit()
         }
 
-        binding.toggleRecord.isChecked = AppMain.isService
+        binding.toggleRecord.isChecked = AppMain.instance.isService
         binding.toggleRecord.setOnCheckedChangeListener { _, isChecked ->
             val intent = Intent(this, ServiceLocation::class.java)
             if (isChecked) {
@@ -57,6 +66,7 @@ class ActMain : AppCompatActivity() {
             }
         }
 
+        updateRecordSummary()
         createNotificationChannel()
 
         if (savedInstanceState == null)
@@ -64,7 +74,8 @@ class ActMain : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        LogModel.debug("onDestroy()")
+        LogModel.debug("ActMain.onDestroy()")
+        unregisterReceiver(serviceReceiver)
         realm.close()
         super.onDestroy()
     }
@@ -104,13 +115,13 @@ class ActMain : AppCompatActivity() {
             startActivity(shareIntent)
         }
         R.id.optionDeleteLog -> true.also {
-            if (AppMain.isService)
+            if (AppMain.instance.isService)
                 Toast.makeText(this, "Stop Recording", Toast.LENGTH_SHORT).show()
             else
                 realm.executeTransactionAsync {  db-> db.delete(LogModel::class.java) }
         }
         R.id.optionDeleteRecord -> true.also {
-            if (AppMain.isService)
+            if (AppMain.instance.isService)
                 Toast.makeText(this, "Stop Recording", Toast.LENGTH_SHORT).show()
             else
                 realm.executeTransactionAsync {  db-> db.delete(RecordModel::class.java) }
@@ -119,6 +130,21 @@ class ActMain : AppCompatActivity() {
             DialogPrivacy().show(supportFragmentManager,null)
         }
         else -> super.onOptionsItemSelected(item)
+    }
+
+    private fun updateRecordSummary() {
+        recordVM.totalTime.value = AppMain.Record.totalTime
+        recordVM.totalDistance.value = AppMain.Record.totalDistance
+        recordVM.elevationMin.value = AppMain.Record.elevationMin
+        recordVM.elevationMax.value = AppMain.Record.elevationMax
+        recordVM.elevationGain.value = AppMain.Record.elevationGain
+        recordVM.elevationLoss.value = AppMain.Record.elevationLoss
+    }
+
+    private val serviceReceiver = object: BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            updateRecordSummary()
+        }
     }
 
     private fun createNotificationChannel() {

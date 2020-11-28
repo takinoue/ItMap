@@ -28,7 +28,7 @@ class ServiceLocation : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        AppMain.isService = true
+        AppMain.instance.isService = true
         fusedClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
@@ -96,7 +96,7 @@ class ServiceLocation : Service() {
     override fun onDestroy() {
         LogModel.debug("onDestroy()")
         stopLocationUpdates()
-        AppMain.isService = false
+        AppMain.instance.isService = false
         super.onDestroy()
     }
 
@@ -178,7 +178,12 @@ class ServiceLocation : Service() {
                     "Record[%03d] = { %.3f, %.3f }"
                         .format(newId, location.longitude, location.latitude)
                 )
+                // Calculate Total and Elevation
+                AppMain.Record.update(location.time / 1000.0,
+                    location.longitude, location.latitude, location.altitude)
+                sendBroadcast(Intent("${packageName}.serviceReceiver"))
             }
+            if (0 == uploadTiming) return
             if (0 != uploadCounter && recordCounter - uploadCounter < uploadTiming) return
             // Uploading
             LogModel.debug("uploading")
