@@ -1,5 +1,6 @@
 package cc.atte.itmap
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -18,8 +19,8 @@ class FragmentMap : Fragment() {
         @JvmStatic
         fun newInstance(dummy: Int) =
             FragmentMap().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_DUMMY, dummy)
+                arguments = Bundle().also {
+                    it.putInt(ARG_DUMMY, dummy)
                 }
             }
     }
@@ -49,13 +50,19 @@ class FragmentMap : Fragment() {
         binding = FragmentMapBinding.bind(view)
 
         //binding.htmlMap.webViewClient = WebViewClient()
-        val server = AppMain.Preference.getString(DialogSetting.KEY_SERVER)
-        val account = AppMain.Preference.getString(DialogSetting.KEY_ACCOUNT)
-        if (server != "" && account != "") {
-            binding.htmlMap.settings.javaScriptEnabled = true
-            binding.htmlMap.loadUrl("$server$account.html")
-        } else
-            Toast.makeText(activity, "setting required", Toast.LENGTH_SHORT).show()
+        var address = AppMain.Preference.getString(DialogAddress.KEY_ADDRESS)
+        if ("" == address) {
+            val server = AppMain.Preference.getString(DialogSetting.KEY_SERVER)
+            val account = AppMain.Preference.getString(DialogSetting.KEY_ACCOUNT)
+            if ("" == server || "" == account)
+                Toast.makeText(activity, "setting required", Toast.LENGTH_SHORT).show()
+            address = "$server$account.html"
+            AppMain.Preference.putString(DialogAddress.KEY_ADDRESS, address)
+        }
+
+        @SuppressLint("SetJavaScriptEnabled")
+        binding.htmlMap.settings.javaScriptEnabled = true
+        binding.htmlMap.loadUrl(address)
 
         return view
     }

@@ -30,21 +30,21 @@
             android:id="@+id/radioLog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Log"
+            android:text="@string/log"
             android:textSize="20sp" />
 
         <RadioButton
             android:id="@+id/radioMap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Map"
+            android:text="@string/map"
             android:textSize="20sp" />
 
         <RadioButton
             android:id="@+id/radioRecord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Record"
+            android:text="@string/record"
             android:textSize="20sp" />
 
     </RadioGroup>

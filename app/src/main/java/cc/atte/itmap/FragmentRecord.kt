@@ -55,24 +55,24 @@ class FragmentRecord : Fragment() {
         binding = FragmentRecordBinding.bind(view)
 
         viewModel.totalTime.observe(viewLifecycleOwner, {
-            binding.recordTotalTimeSecond.text = "%02d:%02d:%02d".format(
+            binding.recordTotalTimeSecond.text = getString(R.string.formatTime).format(
                 (it / 3600).toInt(), (it / 60).toInt() % 60, it.toInt() % 60)
         })
         viewModel.totalDistance.observe(viewLifecycleOwner, {
-            binding.recordTotalDistanceMetre.text = "%.1fm".format(it)
+            binding.recordTotalDistanceMetre.text = getString(R.string.formatDistance).format(it)
         })
 
         viewModel.elevationMin.observe(viewLifecycleOwner, {
-            binding.recordElevationMinMetre.text = "%.1fm".format(it)
+            binding.recordElevationMinMetre.text = getString(R.string.formatElevation).format(it)
         })
         viewModel.elevationMax.observe(viewLifecycleOwner, {
-            binding.recordElevationMaxMetre.text = "%.1fm".format(it)
+            binding.recordElevationMaxMetre.text = getString(R.string.formatElevation).format(it)
         })
         viewModel.elevationGain.observe(viewLifecycleOwner, {
-            binding.recordElevationGainMetre.text = "%.1fm".format(it)
+            binding.recordElevationGainMetre.text = getString(R.string.formatElevation).format(it)
         })
         viewModel.elevationLoss.observe(viewLifecycleOwner, {
-            binding.recordElevationLossMetre.text = "%.1fm".format(it)
+            binding.recordElevationLossMetre.text = getString(R.string.formatElevation).format(it)
         })
 
         val recordData = realm.where(RecordModel::class.java)
@@ -87,14 +87,6 @@ class FragmentRecord : Fragment() {
             if (binding.recordHistoryList.canScrollVertically(1))
                 binding.recordHistoryList.smoothScrollToPosition(recordData.size - 1)
         }
-
-        binding.recordHistoryList.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                binding.recordHistoryLast.isEnabled = recyclerView.canScrollVertically(-1)
-                binding.recordHistoryFirst.isEnabled = recyclerView.canScrollVertically(1)
-            }
-        })
 
         val adapter = RecordAdapter(recordData)
         val layoutManager = object: LinearLayoutManager(activity) {
@@ -111,6 +103,13 @@ class FragmentRecord : Fragment() {
 
         binding.recordHistoryList.adapter = adapter
         binding.recordHistoryList.layoutManager = layoutManager
+        binding.recordHistoryList.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                binding.recordHistoryLast.isEnabled = recyclerView.canScrollVertically(-1)
+                binding.recordHistoryFirst.isEnabled = recyclerView.canScrollVertically(1)
+            }
+        })
 
         return view
     }

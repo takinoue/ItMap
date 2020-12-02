@@ -43,6 +43,7 @@ class ActMain : AppCompatActivity() {
         }
 
         binding.radioMap.setOnCheckedChangeListener { _, isChecked ->
+            LogModel.debug("Map Click")
             if (!isChecked) return@setOnCheckedChangeListener
             val f = FragmentMap.newInstance(0)
             val ft = supportFragmentManager.beginTransaction()
@@ -125,6 +126,37 @@ class ActMain : AppCompatActivity() {
                 Toast.makeText(this, "Stop Recording", Toast.LENGTH_SHORT).show()
             else
                 realm.executeTransactionAsync {  db-> db.delete(RecordModel::class.java) }
+        }
+        R.id.optionAddressEdit -> true.also {
+            DialogAddress().show(supportFragmentManager,null)
+        }
+        R.id.optionAddressStandard -> true.also {
+            AppMain.Preference.putString(DialogAddress.KEY_ADDRESS, "")
+            if (binding.radioMap.isChecked) {
+                val f = FragmentMap.newInstance(0)
+                val ft = supportFragmentManager.beginTransaction()
+                ft.replace(R.id.container, f, "MAP").commit()
+            } else
+                binding.radioMap.performClick()
+        }
+        R.id.optionAddress1, R.id.optionAddress2, R.id.optionAddress3 -> true.also {
+            val key = when (item.itemId) {
+                R.id.optionAddress1 -> DialogAddress.KEY_ADDRESS1
+                R.id.optionAddress2 -> DialogAddress.KEY_ADDRESS2
+                R.id.optionAddress3 -> DialogAddress.KEY_ADDRESS3
+                else -> DialogAddress.KEY_ADDRESS // not occuerred
+            }
+            val address = AppMain.Preference.getString(key)
+            if ("" != address) {
+                AppMain.Preference.putString(DialogAddress.KEY_ADDRESS, address)
+                if (binding.radioMap.isChecked) {
+                    val f = FragmentMap.newInstance(0)
+                    val ft = supportFragmentManager.beginTransaction()
+                    ft.replace(R.id.container, f, "MAP").commit()
+                } else
+                    binding.radioMap.performClick()
+            } else
+                Toast.makeText(this, "Set Address", Toast.LENGTH_SHORT).show()
         }
         R.id.optionPrivacy -> true.also {
             DialogPrivacy().show(supportFragmentManager,null)

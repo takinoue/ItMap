@@ -37,9 +37,10 @@ class RecordAdapter(data: OrderedRealmCollection<RecordModel>)
         holder.upload.isChecked = record.upload
         holder.timestamp.text = DateFormat.format(
             "kk:mm:ss", Date((record.timestamp * 1000).toLong()))
-        holder.longitude.text = "%.6f".format(record.longitude)
-        holder.latitude.text = "%.6f".format(record.latitude)
-        holder.altitude.text = "%.1fm".format(record.altitude)
+        val appCtx = AppMain.instance.applicationContext
+        holder.longitude.text = appCtx.getString(R.string.formatLongitude).format(record.longitude)
+        holder.latitude.text = appCtx.getString(R.string.formatLatitude).format(record.latitude)
+        holder.altitude.text = appCtx.getString(R.string.formatAltitude).format(record.altitude)
     }
 
     override fun getItemId(position: Int): Long =

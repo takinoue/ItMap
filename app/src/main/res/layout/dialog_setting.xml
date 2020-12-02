@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -9,37 +10,43 @@
         android:id="@+id/textServer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Server" />
+        android:text="@string/server" />
 
     <EditText
         android:id="@+id/settingServer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text" />
+        android:inputType="text"
+        android:autofillHints=""
+        tools:ignore="LabelFor" />
 
     <TextView
         android:id="@+id/textAccount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Account" />
+        android:text="@string/account" />
 
     <EditText
         android:id="@+id/settingAccount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text" />
+        android:inputType="text"
+        android:autofillHints=""
+        tools:ignore="LabelFor" />
 
     <TextView
         android:id="@+id/textKeyword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Keyword" />
+        android:text="@string/keyword" />
 
     <EditText
         android:id="@+id/settingKeyword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:autofillHints=""
+        tools:ignore="LabelFor" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,14 +57,16 @@
             android:id="@+id/textRecordTiming"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Record Timing (per N minites)" />
+            android:text="@string/recordTiming" />
 
         <EditText
             android:id="@+id/settingRecordTiming"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:inputType="number" />
+            android:autofillHints=""
+            android:inputType="number"
+            tools:ignore="LabelFor" />
 
     </LinearLayout>
 
@@ -70,26 +79,28 @@
             android:id="@+id/textUploadTiming"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Upload Timing (per N records)" />
+            android:text="@string/uploadTiming" />
 
         <EditText
             android:id="@+id/settingUploadTiming"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:inputType="number" />
+            android:inputType="number"
+            android:autofillHints=""
+            tools:ignore="LabelFor" />
     </LinearLayout>
 
     <CheckBox
         android:id="@+id/settingAutoCleanData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Auto Clean Data (valid at restart)" />
+        android:text="@string/autoCleanData" />
 
     <CheckBox
         android:id="@+id/settingAutoFollowRecord"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Auto Follow Record (efective immidiately)" />
+        android:text="@string/autoFollowRecord" />
 
 </LinearLayout>

@@ -5,34 +5,53 @@
     <item
         android:id="@+id/optionSetting"
         android:icon="@drawable/ic_our_setting"
-        android:title="Setting"
-        app:showAsAction="always" />
+        android:title="@string/setting"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/optionMessage"
         android:icon="@drawable/ic_our_message"
-        android:title="Message"
-        app:showAsAction="always" />
-    <item android:title="Share">
+        android:title="@string/message"
+        app:showAsAction="ifRoom" />
+    <item android:title="@string/share">
         <menu>
             <item
                 android:id="@+id/optionShareUrl"
-                android:title="Share URL" />
+                android:title="@string/shareUrl" />
             <item
                 android:id="@+id/optionShareRecord"
-                android:title="Share Record" />
+                android:title="@string/shareRecord" />
         </menu>
     </item>
-    <item android:title="Delete">
+    <item android:title="@string/delete">
         <menu>
             <item
                 android:id="@+id/optionDeleteLog"
-                android:title="Delete Log" />
+                android:title="@string/deleteLog" />
             <item
                 android:id="@+id/optionDeleteRecord"
-                android:title="Delete Record" />
+                android:title="@string/deleteRecord" />
+        </menu>
+    </item>
+    <item android:title="@string/mapAddress">
+        <menu>
+            <item
+                android:id="@+id/optionAddressEdit"
+                android:title="@string/addressEdit" />
+            <item
+                android:id="@+id/optionAddressStandard"
+                android:title="@string/addressStandard" />
+            <item
+                android:id="@+id/optionAddress1"
+                android:title="@string/address1" />
+            <item
+                android:id="@+id/optionAddress2"
+                android:title="@string/address2" />
+            <item
+                android:id="@+id/optionAddress3"
+                android:title="@string/address3" />
         </menu>
     </item>
     <item
         android:id="@+id/optionPrivacy"
-        android:title="Set Private Area" />
+        android:title="@string/setPrivateArea" />
 </menu>
